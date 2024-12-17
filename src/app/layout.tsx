@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import HeaderBar from "@/components/HeaderBar";
+import MainContent from "@/components/MainContent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,7 +15,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Profiles App",
+  title: {
+    template: "Profiles App - %s",
+    default: "Profiles App",
+  },
   description: "Your user profile app.",
 };
 
@@ -24,7 +29,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <HeaderBar />
+        <MainContent>{children}</MainContent>
+      </body>
     </html>
   );
 }

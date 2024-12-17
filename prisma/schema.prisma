@@ -12,3 +12,25 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id            Int       @id @default(autoincrement())
+  email         String    @unique
+  password      String
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  profile       Profile?
+}
+
+model Profile {
+  id            Int       @id @default(autoincrement())
+  firstName     String
+  lastName      String
+  birthDate     DateTime
+  description   String?
+  photoUrl      String?
+  user          User?      @relation(fields: [userId], references: [id])
+  userId        Int?       @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
