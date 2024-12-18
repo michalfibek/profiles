@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserCircleIcon } from "@heroicons/react/24/outline";
+import { useSession } from "next-auth/react";
+import UserBar from "./UserBar";
 
 const menuItems = [
   {
@@ -17,10 +19,13 @@ const menuItems = [
 
 export default function HeaderBar() {
   const currentPath = usePathname();
+  const { data: session } = useSession();
+  const user = session?.user && session.user.email ? { email: session.user.email } : null;
+  // console.log(session);
 
   return (
     <header className="w-full font-[family-name:var(--font-geist-sans)] bg-gray-100 text-gray-700 border-b-2 shadow-sm">
-      <div className="container mx-auto px-4 py-6 flex justify-between items-center flex-col gap-4 sm:flex-row">
+      <div className="container mx-auto px-4 py-6 flex flex-wrap justify-between items-center flex-col gap-4 sm:flex-row">
         <div className="text-2xl font-bold">
           <Link
             href="/"
@@ -44,6 +49,11 @@ export default function HeaderBar() {
                 </Link>
               </li>
             ))}
+            {user && (
+              <li>
+                <UserBar user={user} />
+              </li>
+            )}
           </ul>
         </nav>
       </div>

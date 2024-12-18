@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import HeaderBar from "@/components/HeaderBar";
 import MainContent from "@/components/MainContent";
+import AuthProvider from "@/context/AuthProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
   description: "Your user profile app.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -30,8 +31,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <HeaderBar />
-        <MainContent>{children}</MainContent>
+        <AuthProvider>
+          <HeaderBar />
+          <MainContent>{children}</MainContent>
+        </AuthProvider>
       </body>
     </html>
   );

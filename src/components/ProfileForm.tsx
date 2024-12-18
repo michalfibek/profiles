@@ -50,7 +50,7 @@ export default function ProfileForm({ profileData }: ProfileFormProps) {
   });
 
   async function onSubmit(values: ProfileFormValues) {
-    console.log(values);
+    // console.log(values);
 
     if (profileData && profileData.id) {
       try {
