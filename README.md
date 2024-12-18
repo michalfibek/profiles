@@ -1,11 +1,11 @@
-Profiles App
+# Profiles App
 
 ## Getting Started
 
 First, run the development server:
 
 ```bash
-npm install --legacy-peer-deps
+npm install
 npm run dev
 ```
 
