@@ -8,8 +8,6 @@ export default function UserBar({
 }: {
   user: z.infer<typeof userLoggedSchema> | null | undefined;
 }) {
-  if (!user) return null;
-
   return (
     <span className={`inline-block border-b-2 border-transparent py-1`}>
       {user ? (
@@ -17,13 +15,20 @@ export default function UserBar({
           <span>{user.email}</span>
           <Link
             href={`/api/auth/signout?callbackUrl=/`}
-            className="bg-gray-300 px-2 py-1 rounded-md ml-2"
+            className="bg-purple-200 px-2 py-1 rounded-md ml-2"
           >
             Logout
           </Link>
         </>
       ) : (
-        <Link href={`/api/auth/signin`}>Login</Link>
+        <>
+          <Link href={`/api/auth/signin`} className="bg-purple-200 px-2 py-1 rounded-md ml-2">
+            Login
+          </Link>
+          <Link href={`/auth/signup`} className="bg-gray-200 px-2 py-1 rounded-md ml-2">
+            Register
+          </Link>
+        </>
       )}
     </span>
   );

@@ -17,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
 import { dateToString } from "@/lib/utils";
 import TextEditor from "./TextEditor";
-import { createProfile, updateProfile } from "@/actions/actions";
+import { createProfile, updateProfile } from "@/actions/profileActions";
 import { useRouter } from "next/navigation";
 
 type ProfileFormValues = z.infer<typeof profileSchema>;

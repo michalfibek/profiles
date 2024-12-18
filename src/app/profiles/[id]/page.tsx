@@ -2,7 +2,9 @@ import PageTitle from "@/components/PageTitle";
 import ProfileForm from "@/components/ProfileForm";
 import prisma from "@/lib/db";
 
-export default async function ProfilePage({ params }: { params: { id: number } }) {
+type Params = Promise<{ id: number }>;
+
+export default async function ProfilePage({ params }: { params: Params }) {
   const { id } = await params;
   const profile = await prisma.profile.findUnique({
     where: {

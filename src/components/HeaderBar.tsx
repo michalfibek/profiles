@@ -12,8 +12,12 @@ const menuItems = [
     path: "/",
   },
   {
-    name: "All Profiles",
+    name: "Profiles",
     path: "/profiles",
+  },
+  {
+    name: "Users",
+    path: "/users",
   },
 ];
 
@@ -37,23 +41,25 @@ export default function HeaderBar() {
 
         <nav>
           <ul className="flex space-x-6">
-            {menuItems.map((item) => (
-              <li key={item.name}>
-                <Link
-                  href={item.path}
-                  className={`inline-block border-b-2 border-transparent hover:text-purple-600 py-1 ${
-                    currentPath == item.path ? "border-b-purple-600 text-purple-600 active" : ""
-                  }`}
-                >
-                  {item.name}
-                </Link>
-              </li>
-            ))}
             {user && (
-              <li>
-                <UserBar user={user} />
-              </li>
+              <>
+                {menuItems.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.path}
+                      className={`inline-block border-b-2 border-transparent hover:text-purple-600 py-1 ${
+                        currentPath == item.path ? "border-b-purple-600 text-purple-600 active" : ""
+                      }`}
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </>
             )}
+            <li>
+              <UserBar user={user} />
+            </li>
           </ul>
         </nav>
       </div>

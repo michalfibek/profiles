@@ -3,7 +3,7 @@ import prisma from "@/lib/db";
 import Link from "next/link";
 import PageTitle from "@/components/PageTitle";
 import { buttonVariants } from "@/components/ui/button";
-import ProfilesTable from "@/components/ProfilesTable";
+import ProfilesTable from "@/components/tables/ProfilesTable";
 
 export const metadata: Metadata = {
   title: "All profiles",

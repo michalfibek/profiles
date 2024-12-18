@@ -1,3 +1,4 @@
+// import { hash } from "bcrypt";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -17,4 +18,13 @@ export function dateToString(date: Date | string): string {
   const day = String(date.getDate()).padStart(2, "0");
 
   return `${year}-${month}-${day}`;
+}
+
+export async function getPasswordHash(password: string): Promise<string> {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const bcrypt = require("bcrypt");
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+
+  return hash;
 }
