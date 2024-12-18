@@ -1,10 +1,12 @@
 import PageTitle from "@/components/PageTitle";
+import ProfileForm from "@/components/ProfileForm";
 import prisma from "@/lib/db";
 
 export default async function ProfilePage({ params }: { params: { id: number } }) {
+  const { id } = await params;
   const profile = await prisma.profile.findUnique({
     where: {
-      id: Number(params.id),
+      id: Number(id),
     },
   });
 
@@ -17,7 +19,9 @@ export default async function ProfilePage({ params }: { params: { id: number } }
       <PageTitle>
         Profile: {profile.firstName} {profile.lastName}
       </PageTitle>
-      <div>{profile.description}</div>
+      <div>
+        <ProfileForm profileData={profile} />
+      </div>
     </div>
   );
 }

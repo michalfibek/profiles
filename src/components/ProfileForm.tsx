@@ -3,7 +3,7 @@
 import React from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { profileSchema } from "../schemas/profileSchema";
+import { profileSchema, profileSchemaInput } from "@/schemas/profileSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -15,14 +15,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "./ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon } from "@heroicons/react/24/outline";
-import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
+import { dateToString } from "@/lib/utils";
 import TextEditor from "./TextEditor";
+import { createProfile, updateProfile } from "@/actions/actions";
+import { useRouter } from "next/navigation";
 
 type ProfileFormValues = z.infer<typeof profileSchema>;
+type ProfileFormInputValues = z.infer<typeof profileSchemaInput>;
 
 type ProfileFormProps = {
   onSuccess?: () => void;
@@ -30,19 +29,22 @@ type ProfileFormProps = {
 };
 
 export default function ProfileForm({ profileData }: ProfileFormProps) {
-  const form = useForm<ProfileFormValues>({
+  const router = useRouter();
+  const form = useForm<ProfileFormInputValues>({
     defaultValues: profileData
       ? {
           firstName: profileData.firstName,
           lastName: profileData.lastName,
-          birthDate: profileData.birthDate ? new Date(profileData.birthDate) : undefined,
-          description: profileData.description,
+          birthDate: profileData.birthDate ? dateToString(profileData.birthDate) : "",
+          description: profileData.description ?? "",
+          photoUrl: profileData.photoUrl ?? null,
         }
       : {
           firstName: "",
           lastName: "",
-          birthDate: new Date(),
+          birthDate: "",
           description: "",
+          photoUrl: null,
         },
     resolver: zodResolver(profileSchema),
   });
@@ -50,22 +52,30 @@ export default function ProfileForm({ profileData }: ProfileFormProps) {
   async function onSubmit(values: ProfileFormValues) {
     console.log(values);
 
-    if (profileData) {
-      // await fetch(`/api/profiles/${profileData.id}`, {
-      //   method: "PATCH",
-      //   body: JSON.stringify(data),
-      // });
+    if (profileData && profileData.id) {
+      try {
+        await updateProfile(profileData.id, values);
+        // console.log("Profile updated successfully!");
+        router.push("/profiles");
+      } catch (error) {
+        console.error(error);
+        // console.log("Failed to update profile.");
+      }
     } else {
-      // await fetch("/api/profiles", {
-      //   method: "POST",
-      //   body: JSON.stringify(data),
-      // });
+      try {
+        await createProfile(values);
+        // console.log("Profile created successfully!");
+        router.push("/profiles");
+      } catch (error) {
+        console.error(error);
+        // console.log("Failed to create profile.");
+      }
     }
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(onSubmit, (errors) => console.log(errors))}>
         <div className="space-y-4">
           <FormField
             control={form.control}
@@ -101,30 +111,9 @@ export default function ProfileForm({ profileData }: ProfileFormProps) {
             render={({ field }) => (
               <FormItem className="flex flex-col">
                 <FormLabel>Date of birth</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-[240px] pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground",
-                        )}
-                      >
-                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
-                    />
-                  </PopoverContent>
-                </Popover>
+                <FormControl>
+                  <Input type="date" {...field} />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -146,7 +135,7 @@ export default function ProfileForm({ profileData }: ProfileFormProps) {
 
           <div>
             <Button type="submit" variant="default">
-              Create Profile
+              {profileData ? "Save Profile" : "Create Profile"}
             </Button>
           </div>
         </div>

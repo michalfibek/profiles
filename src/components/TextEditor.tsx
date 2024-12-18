@@ -1,7 +1,6 @@
 "use client";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import Heading from "@tiptap/extension-heading";
 import ToolBar from "./Toolbar";
 
 function TextEditor({
@@ -13,14 +12,15 @@ function TextEditor({
 }) {
   const editor = useEditor({
     extensions: [
-      StarterKit.configure({}),
-      Heading.configure({
-        HTMLAttributes: {
-          class: "text-xl font-bold",
-          levels: [2],
+      StarterKit.configure({
+        heading: {
+          HTMLAttributes: {
+            class: "text-xl font-bold",
+          },
         },
       }),
     ],
+    immediatelyRender: false,
     content: description,
     editorProps: {
       attributes: {
