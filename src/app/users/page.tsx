@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   title: "All profiles",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function ProfilesPage() {
   // const router = useRouter();
   const users = await prisma.user.findMany();
